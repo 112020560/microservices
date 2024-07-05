@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import joi from 'joi';
+import * as joi from 'joi';
 
 interface EnvVars {
   PORT: number;
