@@ -3,6 +3,7 @@ import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { PaginationDto } from 'src/common';
 
 @Controller('customer')
 export class CustomerController {
@@ -14,9 +15,14 @@ export class CustomerController {
     return this.customerService.create(createCustomerDto);
   }
 
-  @Get()
+  @MessagePattern({cmd: 'get_all_customer'})
   findAll() {
     return this.customerService.findAll();
+  }
+
+  @MessagePattern({cmd: 'get_all_customer'})
+  async findAllPagination(@Payload() paginationDto: PaginationDto) {
+    return await this.customerService.findPagination(paginationDto);
   }
 
   @Get(':id')
