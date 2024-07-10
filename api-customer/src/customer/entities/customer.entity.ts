@@ -23,7 +23,7 @@ export class MethodOfPayment {
   tags: Array<Tag>;
 }
 
-@Schema({collection: 'Customer'})
+@Schema({collection: 'Customer', strict: false})
 export class CustomerEntity {
   @Prop({ type: SchemaTypes.ObjectId })
   id: mongoose.Types.ObjectId

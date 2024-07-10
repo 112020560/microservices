@@ -20,19 +20,19 @@ export class CustomerController {
     return this.customerService.findAll();
   }
 
-  @MessagePattern({cmd: 'get_all_customer'})
+  @MessagePattern({cmd: 'get_all_customer_pagination'})
   async findAllPagination(@Payload() paginationDto: PaginationDto) {
     return await this.customerService.findPagination(paginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @MessagePattern({cmd: 'find_by_id'})
+  findOne(@Payload() id: string) {
     return this.customerService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCustomerDto: UpdateCustomerDto) {
-    return this.customerService.update(id, updateCustomerDto);
+  @MessagePattern({cmd: 'update_customer'})
+  update(@Payload() updateCustomerDto: UpdateCustomerDto) {
+    return this.customerService.update(updateCustomerDto.id, updateCustomerDto);
   }
 
   @Delete(':id')

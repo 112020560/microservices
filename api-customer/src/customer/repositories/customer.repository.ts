@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { CustomerDocument, CustomerEntity } from "../entities";
@@ -7,6 +7,7 @@ import { PaginationDto } from "src/common";
 
 @Injectable()
 export class CustomerRepository {
+  private logger = new Logger(CustomerRepository.name);
     constructor(
         @InjectModel(CustomerEntity.name) private customerModel: Model<CustomerEntity>,
       ) {
@@ -51,15 +52,19 @@ export class CustomerRepository {
       }
     
       async findOne(id: string): Promise<CustomerDocument> {
-        return await this.customerModel.findById(id);
+        this.logger.debug(id)
+        return await this.customerModel.findById( new mongoose.Types.ObjectId(id));
       }
     
       async update(id: string, updateCustomerDto: UpdateCustomerDto) {
+        const {id: __, ...data} = updateCustomerDto;
+        this.logger.debug(`Id ${id}`);
+        this.logger.debug(`Data: ${JSON.stringify(data)}`);
         return await this.customerModel.updateOne({
           where: {
-            _id: id,
+            _id: new mongoose.Types.ObjectId(id),
           },
-          updateCustomerDto,
+          data,
         });
       }
 }

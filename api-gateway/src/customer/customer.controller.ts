@@ -22,25 +22,30 @@ export class CustomerController {
   @Version(version)
   @Get()
   findAll() {
+    this.logger.debug(`findAll invoke`)
     return this.customerService.findAll();
   }
 
   @Version(version)
-  @Get()
+  @Get('query')
   findAllPagination(@Query() paginationDto: PaginationDto) {
-    return this.customerService.findAll();
+    this.logger.debug(`findAllPagination invoke`)
+    return this.customerService.findAllPagination(paginationDto);
   }
 
   @Version(version)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.customerService.findOne(+id);
+    this.logger.debug(`FindOne: ${id}`);
+    return this.customerService.findOne(id);
   }
 
   @Version(version)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCustomerDto: UpdateCustomerDto) {
-    return this.customerService.update(+id, updateCustomerDto);
+    this.logger.debug(`invoke update: ${id}`);
+    this.logger.debug(updateCustomerDto);
+    return this.customerService.update(id, updateCustomerDto);
   }
 
   @Version(version)

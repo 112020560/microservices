@@ -77,8 +77,24 @@ export class CustomerService {
     }
   }
 
-  async findOne(id: string): Promise<CustomerDocument> {
-    return await this.customerRepository.findOne(id);
+  async findOne(id: string): Promise<CustomerModel> {
+    const customerDoc = await this.customerRepository.findOne(id);
+    return {
+      id: customerDoc._id.toString(),
+      fullName: `${customerDoc.first_name} ${customerDoc.second_name} ${customerDoc.last_name} ${customerDoc.second_last_name}`,
+      identification_number: customerDoc.identification_number,
+      status: customerDoc.status,
+      email: customerDoc.email,
+      method_of_payments:
+        customerDoc.method_of_payments.map<MethodOfPaymentModel>((mop) => {
+          return {
+            method: mop.method,
+            primary: mop.is_default ? 'Y' : 'N',
+            value: mop.value,
+            status: mop.status,
+          };
+        }),
+    };
   }
 
   async update(id: string, updateCustomerDto: UpdateCustomerDto) {
