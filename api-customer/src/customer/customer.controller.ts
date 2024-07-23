@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { PaginationDto } from 'src/common';
 
 @Controller('customer')
@@ -35,8 +35,8 @@ export class CustomerController {
     return this.customerService.update(updateCustomerDto.id, updateCustomerDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.customerService.remove(+id);
+  @EventPattern( {cmd: 'delete_by_id'})
+  remove(@Payload() id: string) {
+    this.customerService.remove(id);
   }
 }

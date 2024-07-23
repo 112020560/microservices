@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { CustomerRepository, SharedRepository } from './repositories';
@@ -101,7 +101,12 @@ export class CustomerService {
     return await this.customerRepository.update(id, updateCustomerDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} customer`;
+  async remove(id: string) {
+    const customer = await this.customerRepository.findOne(id);
+    if(! customer) throw new NotFoundException(`Customer with id ${id} does not exist!`)
+
+    customer.status = 'disable';
+
+    return await this.customerRepository.delete(id, customer)
   }
 }

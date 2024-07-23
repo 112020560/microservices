@@ -40,7 +40,8 @@ export class CustomerService {
     return await lastValueFrom(observer);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} customer`;
+  remove(id: string) {
+    this.client.emit({cmd: 'delete_by_id'}, {id})
+    return {message: `id ${id} deleted`};
   }
 }

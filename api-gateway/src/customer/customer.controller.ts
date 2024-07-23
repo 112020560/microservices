@@ -51,6 +51,6 @@ export class CustomerController {
   @Version(version)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.customerService.remove(+id);
+    return this.customerService.remove(id);
   }
 }
