@@ -10,14 +10,14 @@ export class MemberRepository {
     constructor(@InjectModel(MemberEntity.name) private memberModel: Model<MemberEntity>) {
         mongoose.set('debug', true);
       }
-    async create(createMemberDto: CreateMemberDto) {
+    async create(createMemberDto: CreateMemberDto): Promise<MemberDocument> {
       const createCustomer = new this.memberModel(createMemberDto);
       const response = await createCustomer.save();
       console.log('Response =>', response);
       return response;
       }
     
-      async findAll() {
+      async findAll(): Promise<Array<MemberDocument>> {
         return await this.memberModel
         .find({
           status: { $ne: 'disable' },
@@ -41,9 +41,9 @@ export class MemberRepository {
         return await this.memberModel.countDocuments();
       }
     
-      async findOne(id: string) {
+      async findOne(id: string): Promise<MemberDocument> {
         this.logger.debug(id);
-    return await this.memberModel.findById(new mongoose.Types.ObjectId(id));
+        return await this.memberModel.findById(new mongoose.Types.ObjectId(id));
       }
     
       async update(id: string, updateMemberDto: UpdateMemberDto) {
